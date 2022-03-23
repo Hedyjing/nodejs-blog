@@ -1,5 +1,5 @@
-const { getList, getDetail, newBlog, updateBlog, deleteBlog } = require('../controller/blog')
 const { SuccessModel, ErrorModel } = require('../model/resModel')
+const { getList, getDetail, newBlog, updateBlog, deleteBlog } = require('../controller/blog')
 
 const handleBlogRouter = (req, res) => {
   const method = req.method
