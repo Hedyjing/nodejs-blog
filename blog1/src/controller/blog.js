@@ -14,20 +14,23 @@ const getList = (author, keyword) => {
   return exec(sql)
 }
 const getDetail = (id) => {
-  return [
-    {
-      id: 1,
-      title: "标题A",
-      content: "内容A",
-      createTime: 1647964414629,
-      author: "zhangsan",
-    },
-  ];
+  id = id || 1
+  const sql = `select * from blogs where id=${id}`
+  // 要返回一个对象
+  return exec(sql).then(rows => {
+    return rows[0]
+  })
 }
 const newBlog = (blogData = {}) => {
-  return {
-    id: 3
-  }
+  const { title, content, author } = blogData
+  Date.now()
+  const sql = `insert into blogs (title, content, createtime,author) 
+  values ('${title}','${content}',${Date.now()},'${author}');`
+  return exec(sql).then(insertData => {
+    return {
+      id: insertData.insertId
+    }
+  })
 }
 const updateBlog = (id, blogData = {}) => {
   //  id 是要更新博客的id
