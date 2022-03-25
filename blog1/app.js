@@ -2,27 +2,8 @@ const handleBlogRouter = require('./src/router/blog')
 const handleUserRouter = require('./src/router/user')
 const querystring = require('querystring')
 
-// 用于处理 post data
-const getPostData = (req) => {
-  const promise = new Promise((resolve, reject) => {
-    if (req.method !== 'POST' || req.headers['content-type'] !== 'application/json') {
-      resolve({})
-      return
-    }
-    let postData = ''
-    req.on('data', chunk => {
-      postData += chunk.toString()
-    })
-    req.on('end', () => {
-      if (!postData) {
-        resolve({})
-        return
-      }
-      resolve(JSON.parse(postData))
-    })
-  })
-  return promise
-}
+// 定义全局变量存储session数据
+const SESSION_DATA = {}
 
 const serverhandle = (req, res) => {
   // 设置返回格式 JSON
@@ -45,7 +26,18 @@ const serverhandle = (req, res) => {
     const val = arr[1].trim()
     req.cookie[key] = val
   });
-  // 服务端设置cookie
+  // 解析session
+  let needSetCookie = false
+  let userid = req.cookie.userid
+  if (userid) {
+    SESSION_DATA[userid] = SESSION_DATA[userid] || {}
+  } else {
+    needSetCookie = true
+    userid = `${new Date().getTime()}_${Math.random()}`
+    SESSION_DATA[userid] = {}
+  }
+  req.session = SESSION_DATA[userid]
+
 
   getPostData(req).then(postData => {
     req.body = postData
@@ -59,6 +51,9 @@ const serverhandle = (req, res) => {
     const blogResult = handleBlogRouter(req, res)
     if (blogResult) {
       blogResult.then(blogData => {
+        if (needSetCookie) {
+          res.setHeader('Set-Cookie', `userid=${userid}; path=/; httpOnly; expires=${getCookieExpires()}`)
+        }
         res.end(JSON.stringify(blogData))
       })
       return
@@ -67,6 +62,9 @@ const serverhandle = (req, res) => {
     const userResult = handleUserRouter(req, res);
     if (userResult) {
       userResult.then(userData => {
+        if (needSetCookie) {
+          res.setHeader('Set-Cookie', `userid=${userid}; path=/; httpOnly; expires=${getCookieExpires()}`)
+        }
         res.end(JSON.stringify(userData));
       })
       return
@@ -76,5 +74,32 @@ const serverhandle = (req, res) => {
     res.end()
 
   })
+}
+// 用于处理 post data
+const getPostData = (req) => {
+  const promise = new Promise((resolve, reject) => {
+    if (req.method !== 'POST' || req.headers['content-type'] !== 'application/json') {
+      resolve({})
+      return
+    }
+    let postData = ''
+    req.on('data', chunk => {
+      postData += chunk.toString()
+    })
+    req.on('end', () => {
+      if (!postData) {
+        resolve({})
+        return
+      }
+      resolve(JSON.parse(postData))
+    })
+  })
+  return promise
+}
+// 获取cookie过期时间
+const getCookieExpires = () => {
+  const d = new Date()
+  d.setTime(d.getTime() + (24 * 3600 * 1000))
+  return d.toGMTString()
 }
 module.exports = serverhandle
