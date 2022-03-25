@@ -35,10 +35,18 @@ const newBlog = (blogData = {}) => {
 const updateBlog = (id, blogData = {}) => {
   //  id 是要更新博客的id
   // blogData是一个博客对象， 包含title，content
-  return true
+  const { title, content } = blogData
+  const sql = `update blogs set title='${title}',content='${content}' where id=${id}`
+
+  return exec(sql).then(updateData => {
+    return updateData.affectedRows === 1
+  })
 }
-const deleteBlog = id => {
-  return true
+const deleteBlog = (id, author) => {
+  const sql = `delete from blogs where id=${id} and author=${author};`
+  return exec(sql).then(deleteData => {
+    return deleteData.affectedRows === 1
+  })
 }
 module.exports = {
   getList,

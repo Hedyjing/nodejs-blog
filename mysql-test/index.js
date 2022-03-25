@@ -13,7 +13,7 @@ const con = mysql.createConnection({
 con.connect()
 
 // 执行sql语句
-const sql = `select * from blogs where id=1`
+const sql = `select username,realname from users where username='zhagnsan' and password='123'`
 con.query(sql, (err, result) => {
   if (err) {
     console.error(err)
