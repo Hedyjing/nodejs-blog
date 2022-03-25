@@ -1,5 +1,5 @@
 const { SuccessModel, ErrorModel } = require('../model/resModel')
-const { checkLogin } = require('../controller/user')
+const { login } = require('../controller/user')
 
 const handleUserRouter = (req, res) => {
   const method = req.method
@@ -7,7 +7,7 @@ const handleUserRouter = (req, res) => {
   const path = url.split('?')[0]
 
   if (method === 'POST' && path === '/api/user/login') {
-    return checkLogin(req.body.username, req.body.password).then(result => {
+    return login(req.body.username, req.body.password).then(result => {
       if (result?.username) {
         return new SuccessModel()
       } else {
