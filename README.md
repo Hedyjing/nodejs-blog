@@ -13,3 +13,19 @@ A blog built by nodejs
     - blog1/src/db 对 mysql，redis 等数据库查询操作进行封装
     - blog1/src/conf 数据库连接的配置
     - blog1/src/utils/log 日志写入操作
+
+## 1. 处理 HTTP 请求，开发 api 接口
+
+## 2. api 对接数据库
+
+## 3. 登录校验
+
+    1. cookie
+    2. session优化cookie缺陷
+    3. redis优化session缺陷
+
+## 4. 日志
+
+    1. 文件stream操作日志
+        createReadStream, createWriteStream
+    2. readline分析日志
