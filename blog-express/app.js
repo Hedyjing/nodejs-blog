@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const session = require('express-session')
+const redisStore = require('connect-redis')(session)
 
 // 引入路由， 对应blog1中app.js的引入路由
 
@@ -28,13 +29,19 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
 
+const client = require('./db/redis')
+const sessionStore = new redisStore({
+  client
+})
+
 app.use(session({
   secret: 'dkE$_*234_',
   cookie: {
     // path: '/',  // 默认
     // httpOnly: true,  // 默认
     maxAge: 24 * 3600 * 1000
-  }
+  },
+  store: sessionStore
 }))
 
 // 注册路由
