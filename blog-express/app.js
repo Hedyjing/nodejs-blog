@@ -6,8 +6,8 @@ var logger = require('morgan');
 
 // 引入路由， 对应blog1中app.js的引入路由
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+// var indexRouter = require('./routes/index');
+// var usersRouter = require('./routes/users');
 const blogRouter = require('./routes/blog')
 const userRouter = require('./routes/user')
 
@@ -15,8 +15,8 @@ const userRouter = require('./routes/user')
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'jade');
 
 // 对应blog1中的日志access()
 app.use(logger('dev'));
@@ -25,11 +25,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // 对应blog1中解析cookie， 可以通过req.cookie访问
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 
 // 注册路由
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// app.use('/', indexRouter);
+// app.use('/users', usersRouter);
 app.use('/api/blog', blogRouter)
 app.use('/api/user', userRouter)
 
