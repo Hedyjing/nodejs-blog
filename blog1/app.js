@@ -2,11 +2,15 @@ const handleBlogRouter = require('./src/router/blog')
 const handleUserRouter = require('./src/router/user')
 const querystring = require('querystring')
 const { set, get } = require('./src/db/redis')
+const { access } = require('./src/utils/log')
 
 // 定义全局变量存储session数据
 const SESSION_DATA = {}
 
 const serverhandle = (req, res) => {
+  // 记录access log
+  access(`${req.method} -- ${req.url} -- ${req.headers['user-agent']} -- ${Date.now()}`)
+
   // 设置返回格式 JSON
   res.setHeader('Content-type', 'application/json')
 
