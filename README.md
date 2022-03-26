@@ -48,3 +48,23 @@ A blog built by nodejs
     app.get('/',...)
     app.post('/',...)
     命中之后如果有next继续往下，use不需要判断， get和post要判断请求类型和路由路径
+
+---
+
+中间件原理
+
+    1. app.use用来注册中间件
+    2. 遇到http请求，根据method和path判断触发哪些
+    3. 实现next机制，上一个通过next触发下一个
+
+---
+
+代码实现
+
+    1. express实例维护几个栈，第一个all,存放所有use注册的中间件，以及get,post
+    2. register函数判断use,get,post方法的参数,从而把中间件参数压入栈
+    3. use,get,post方法调用register函数，压入自己对应的all，get,post栈
+    4. listen创建httpserver，传入callback回调： （req,res)=>{}
+    5. callback中实现res.json:设置content-type,转换 json对象
+        1. 然后解析url和method，通过match匹配中间件，最后把匹配的中间件传入handler(req,res,next){}
+    6. next函数中弹出stack拿到第一个中间件，执行，然后再执行next
