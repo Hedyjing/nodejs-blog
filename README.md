@@ -36,3 +36,15 @@ A blog built by nodejs
         mysql.escape 转义sql中的特殊字符（去特殊化）
     2. XSS攻击： 窃取前端cookie内容
     3. 密码加密
+
+# express-blog
+
+## express 中间件
+
+    app.use((req, res, next) => {
+        ....
+        next()
+    })
+    app.get('/',...)
+    app.post('/',...)
+    命中之后如果有next继续往下，use不需要判断， get和post要判断请求类型和路由路径
