@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const session = require('express-session')
 
 // 引入路由， 对应blog1中app.js的引入路由
 
@@ -26,6 +27,15 @@ app.use(express.urlencoded({ extended: false }));
 // 对应blog1中解析cookie， 可以通过req.cookie访问
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(session({
+  secret: 'dkE$_*234_',
+  cookie: {
+    // path: '/',  // 默认
+    // httpOnly: true,  // 默认
+    maxAge: 24 * 3600 * 1000
+  }
+}))
 
 // 注册路由
 // app.use('/', indexRouter);
