@@ -29,3 +29,10 @@ A blog built by nodejs
     1. 文件stream操作日志
         createReadStream, createWriteStream
     2. readline分析日志
+
+## 5. 安全
+
+    1. sql注入
+        mysql.escape 转义sql中的特殊字符（去特殊化）
+    2. XSS攻击： 窃取前端cookie内容
+    3. 密码加密
