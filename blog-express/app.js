@@ -1,6 +1,7 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
+const fs = require('fs')
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const session = require('express-session')
@@ -21,7 +22,17 @@ var app = express();
 // app.set('view engine', 'jade');
 
 // 对应blog1中的日志access()
-app.use(logger('dev'));
+const env = process.env.NODE_ENV
+if (env === 'production') {
+  app.use(logger('combined', {
+    stream: fs.createWriteStream(path.join(__dirname, 'logs', 'access.log'), { flags: 'a' })
+  }))  // 线上
+} else {
+  app.use(logger('dev', {
+    stream: process.stdout // 默认是process.stdout标准输出流输出到控制台
+  }));
+}
+
 // 下面两行对应blog1中的app.js处理post data, 这样就可以在req.body直接访问post数据了
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

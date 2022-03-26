@@ -14,7 +14,7 @@ router.get('/list', function (req, res, next) {
 });
 
 router.get('/detail', function (req, res, next) {
-  return getDetail(id).then(data => {
+  return getDetail(req.query.id).then(data => {
     res.json(new SuccessModel(data))
   })
 })
